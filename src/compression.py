@@ -2,14 +2,18 @@ import numpy as np
 import heapq
 from collections import Counter
 
+from s1p2_io import decode_s1p2
 
-def sparsify(nibbles: np.ndarray, sparsity_target_pct: float, center: float = 7.5) -> tuple[np.ndarray, np.ndarray]:
+
+def sparsify(nibbles: np.ndarray, sparsity_target_pct: float) -> tuple[np.ndarray, np.ndarray]:
     # rank-based, not percentile - percentile breaks on discrete 0-15 values
-    distance_from_center = np.abs(nibbles.astype(np.float32) - center)
+    # importance = magnitude of the decoded value, not the raw nibble code
+    # (nibble codes are sign+magnitude, so nibble value isn't ordered by real value)
+    magnitude = np.abs(decode_s1p2(nibbles))
     n_values = len(nibbles)
     n_to_zero = int(n_values * sparsity_target_pct / 100)
 
-    order = np.argsort(distance_from_center, kind='stable')
+    order = np.argsort(magnitude, kind='stable')
     sparse_mask = np.zeros(n_values, dtype=bool)
     sparse_mask[order[:n_to_zero]] = True
 

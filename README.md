@@ -78,6 +78,6 @@ lossy:     1.1x, ~10% quality drop
 target:    ~1.25x without meaningfully hurting quality
 ```
 
-Current sparsification + Huffman baseline hits 1.35x at 30% sparsity on
+Current sparsification + Huffman baseline hits 1.27x at 40% sparsity on
 real weight files - above target, pending a quality check on the full
 model before calling it done.
