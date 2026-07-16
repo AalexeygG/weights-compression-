@@ -1,0 +1,21 @@
+# weight files - too large for git
+data/s1p2/*.bin
+data/s1p2/*.tar.gz
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# results
+outputs/figures/*.png
+outputs/results/*.csv
+outputs/results/*.json
+
+# personal notes, not for the public repo
+
+# os
+.DS_Store
