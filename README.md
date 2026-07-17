@@ -81,3 +81,16 @@ target:    ~1.25x without meaningfully hurting quality
 Current sparsification + Huffman baseline hits 1.27x at 40% sparsity on
 real weight files - above target, pending a quality check on the full
 model before calling it done.
+
+## Findings
+
+`mlp.down_proj` on layers 1-3 sits at ~38-40% zero values, vs ~10% on
+every other layer in the network (checked across all 36 layers):
+
+![zero% by layer depth](outputs/figures/layer_depth_profile.png)
+
+The distribution itself is a sharp spike at exactly 0, not a gradual
+shift - layers 1-3 overlap almost exactly with each other and diverge
+sharply from typical layers:
+
+![layer0 vs layer1-3 value distribution](outputs/figures/layer2_anomaly.png)
