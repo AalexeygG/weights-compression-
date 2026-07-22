@@ -16,6 +16,7 @@ outputs/results/*.csv
 outputs/results/*.json
 
 # personal notes, not for the public repo
+notes/
 
 # os
 .DS_Store

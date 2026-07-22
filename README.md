@@ -14,7 +14,7 @@ hif4_compression/
 ├── src/
 │   ├── s1p2_io.py         # S1P2 decode/unpack
 │   ├── eda.py             # stats over files, anomaly detection
-│   ├── compression.py     # sparsification + huffman
+│   ├── compression.py     # sparsification + zstd
 │   ├── metrics.py         # compression ratio / MSE / hamming
 │   └── visualize.py       # histograms, heatmaps, comparison plots
 ├── scripts/
@@ -78,9 +78,9 @@ lossy:     1.1x, ~10% quality drop
 target:    ~1.25x without meaningfully hurting quality
 ```
 
-Current sparsification + Huffman baseline hits 1.27x at 40% sparsity on
-real weight files - above target, pending a quality check on the full
-model before calling it done.
+Current pipeline (sparsification + zstd) on real weight files: 1.04x
+pure lossless, 1.33x at 40% sparsity - above target, pending a quality
+check on the full model before calling it done.
 
 ## Findings
 

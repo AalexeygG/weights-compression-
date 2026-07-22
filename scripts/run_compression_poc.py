@@ -9,7 +9,7 @@ from compression import compress_f, decompress_f
 from metrics import compression_ratio, compute_mse, compute_hamming_distance
 
 
-def run_on_file(path: str, sparsity_levels=(10, 20, 30, 40)):
+def run_on_file(path: str, sparsity_levels=(0, 10, 20, 30, 40)):
     path = Path(path)
     raw_bytes = path.read_bytes()
     nibbles = unpack_bytes_to_nibbles(raw_bytes)
@@ -21,21 +21,21 @@ def run_on_file(path: str, sparsity_levels=(10, 20, 30, 40)):
 
     for sparsity in sparsity_levels:
         t0 = time.perf_counter()
-        compressed_bits, codebook, sparse_mask = compress_f(nibbles, sparsity)
+        compressed, sparse_mask = compress_f(nibbles, sparsity)
         t1 = time.perf_counter()
 
-        restored_nibbles = decompress_f(compressed_bits, codebook, n_values)
+        restored_nibbles = decompress_f(compressed, n_values)
         t2 = time.perf_counter()
 
         restored_decoded = decode_s1p2(restored_nibbles)
 
-        ratio = compression_ratio(n_values * 4, len(compressed_bits))
+        ratio = compression_ratio(n_values * 4, len(compressed) * 8)
         mse, rmse = compute_mse(original_decoded, restored_decoded)
         hamming_bits, hamming_pct = compute_hamming_distance(nibbles, restored_nibbles)
 
-        print(f"--- sparsity target: {sparsity}% ---")
+        label = "lossless" if sparsity == 0 else f"sparsity {sparsity}%"
+        print(f"--- {label} ---")
         print(f"  compression ratio: {ratio:.3f}x")
-        print(f"  actual sparsity:   {sparse_mask.mean()*100:.1f}%")
         print(f"  mse / rmse:        {mse:.6f} / {rmse:.6f}")
         print(f"  hamming distance:  {hamming_bits} bits ({hamming_pct:.2f}%)")
         print(f"  compress time:     {(t1-t0)*1000:.1f} ms")
