@@ -1,6 +1,5 @@
-# weight files - too large for git
-data/s1p2/*.bin
-data/s1p2/*.tar.gz
+# weight files / datasets - too large for git
+data/
 
 # python
 __pycache__/
