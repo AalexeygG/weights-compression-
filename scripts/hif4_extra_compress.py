@@ -59,7 +59,11 @@ def compress(weight_bytes, in_dim, keep_top_frac=0.5, act_norm=None, mode="mag",
         a = act_norm[np.arange(len(nib)) // in_dim]
         score = a if mode == "act" else np.abs(_decode(nib)) * a
     if keep_top_frac < 1.0:
-        protect = score >= np.quantile(score, keep_top_frac)
+        # rank-based, not threshold - threshold misses the target % on tied scores
+        n_protect = int(len(nib) * keep_top_frac)
+        order = np.argsort(score, kind="stable")
+        protect = np.zeros(len(nib), dtype=bool)
+        protect[order[len(nib) - n_protect:]] = True
         k = nib & 7
         sign = nib >> 3
         k = np.where((k % 2 == 1) & ~protect, k - 1, k)
